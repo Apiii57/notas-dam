@@ -59,14 +59,11 @@ Módulos: Programación, Bases de Datos, Sistemas Informáticos, Entornos de Des
 - [ ] **Confirmar en grupo** los roles y la idea de app.
 - [ ] **Abrir `index.html` y `kanban.html` en el navegador** para comprobar que funcionan (aún no se han probado).
 - [ ] **Crear el tablero en Notion**: Importar → CSV (`kanban-notion.csv`) → Añadir vista Tablero → Agrupar por "Estado" → Compartir con los 4.
-- [ ] **Instalar Git** (no está instalado en el PC de Dani): `winget install Git.Git` y reabrir la terminal.
-- [ ] **Crear el repo `notas-dam` en GitHub** (sin README) y añadir a los otros 3 como colaboradores.
+- [x] **Git instalado** en el PC de Dani (versión 2.56.1).
+- [x] **Repositorio local creado** (`git init`) con el primer commit.
+- [ ] **Crear el repo `notas-dam` en GitHub** (vacío, sin README) y añadir a los otros 3 como colaboradores.
 - [ ] **Subir la carpeta** (desde dentro de `notas-dam`):
   ```
-  git init
-  git add .
-  git commit -m "Día 1: primera pantalla, kanban y README"
-  git branch -M main
   git remote add origin https://github.com/USUARIO/notas-dam.git
   git push -u origin main
   ```
@@ -100,7 +97,7 @@ Ideas para más adelante (solo si sobra tiempo): media ponderada por horas de ca
 
 ## Bloqueos / dudas abiertas
 
-- Git no está instalado todavía.
+- Falta crear el repo en GitHub y hacer el primer `git push`.
 - Falta confirmar los roles y la idea con todo el grupo.
 
 ---
