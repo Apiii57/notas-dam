@@ -61,13 +61,9 @@ Módulos: Programación, Bases de Datos, Sistemas Informáticos, Entornos de Des
 - [ ] **Crear el tablero en Notion**: Importar → CSV (`kanban-notion.csv`) → Añadir vista Tablero → Agrupar por "Estado" → Compartir con los 4.
 - [x] **Git instalado** en el PC de Dani (versión 2.56.1).
 - [x] **Repositorio local creado** (`git init`) con el primer commit.
-- [ ] **Crear el repo `notas-dam` en GitHub** (vacío, sin README) y añadir a los otros 3 como colaboradores.
-- [ ] **Subir la carpeta** (desde dentro de `notas-dam`):
-  ```
-  git remote add origin https://github.com/USUARIO/notas-dam.git
-  git push -u origin main
-  ```
-- [ ] Los demás hacen `git clone https://github.com/USUARIO/notas-dam.git`.
+- [x] **Repo en GitHub creado y subido:** https://github.com/Apiii57/notas-dam
+- [ ] **Añadir colaboradores** (Settings → Collaborators): Jose Luis, Rafael y Pablo.
+- [ ] Los demás hacen `git clone https://github.com/Apiii57/notas-dam.git`.
 
 ---
 
@@ -97,7 +93,7 @@ Ideas para más adelante (solo si sobra tiempo): media ponderada por horas de ca
 
 ## Bloqueos / dudas abiertas
 
-- Falta crear el repo en GitHub y hacer el primer `git push`.
+- Falta añadir a los compañeros como colaboradores en GitHub.
 - Falta confirmar los roles y la idea con todo el grupo.
 
 ---
@@ -105,7 +101,7 @@ Ideas para más adelante (solo si sobra tiempo): media ponderada por horas de ca
 ## Registro diario
 
 ### Día 1 · 24/11/2026
-Montamos la base del proyecto: roles, idea, historias de usuario, primera pantalla y Kanban. Falta conectar Git y crear el tablero en Notion.
+Montamos la base del proyecto: roles, idea, historias de usuario, primera pantalla y Kanban. Git instalado y repo subido a https://github.com/Apiii57/notas-dam. Falta crear el tablero en Notion y añadir colaboradores.
 
 ### Día 2 · __/__/____
 _(rellenar)_
