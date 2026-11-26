@@ -1,0 +1,19 @@
+Tarea,Estado,Persona
+Roles asignados,HECHO,
+Idea de app elegida: Sistema Solar,HECHO,
+Historias de usuario escritas,HECHO,
+Crear repositorio en GitHub,HECHO,Dani
+Sol y planetas girando con periodos reales,HECHO,
+Lunas de cada planeta y sus órbitas,HECHO,
+Cometas Halley y Encke (órbita de Kepler y cola),HECHO,
+"Controles de tiempo: pausa, velocidad, invertir y Hoy",HECHO,
+Zoom y seguir a un astro al pulsarlo,HECHO,
+Ficha de información de cada astro,HECHO,
+Probar la app en el navegador del PC y del móvil,POR HACER,
+Añadir colaboradores al repo de GitHub,POR HACER,Dani
+Cinturón de asteroides,HECHO,
+Versión 3D con Three.js y diseños de planetas,HECHO,
+Satélites artificiales y sondas,HECHO,
+Simulación del agujero negro TON 618,HECHO,
+Planetas enanos (Plutón y Ceres),POR HACER,
+Modo escala real de distancias,POR HACER,

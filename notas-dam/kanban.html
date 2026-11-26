@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kanban Sistema Solar DAM</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #eef1f5; margin: 0; padding: 16px; }
+    h1 { text-align: center; color: #2c3e50; margin: 0 0 6px; }
+    .aviso { text-align: center; color: #c0392b; font-weight: bold; margin-bottom: 14px; }
+    .nueva { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 16px; }
+    .nueva input, .nueva select, .nueva button { padding: 8px; font-size: 15px; }
+    .nueva input { flex: 1; min-width: 200px; max-width: 400px; }
+    .tablero { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    @media (max-width: 700px) { .tablero { grid-template-columns: 1fr; } }
+    .columna { background: #dfe4ea; border-radius: 10px; padding: 10px; min-height: 200px; }
+    .columna h2 { margin: 0 0 10px; font-size: 17px; text-align: center; }
+    .por-hacer h2 { color: #7f8c8d; }
+    .haciendo h2 { color: #e67e22; }
+    .hecho h2 { color: #27ae60; }
+    .tarjeta { background: white; border-radius: 8px; padding: 10px; margin-bottom: 8px;
+               box-shadow: 0 1px 3px rgba(0,0,0,0.15); }
+    .tarjeta .texto { margin-bottom: 6px; }
+    .tarjeta .quien { font-size: 13px; color: #555; margin-bottom: 6px; }
+    .tarjeta button { padding: 3px 8px; margin-right: 4px; cursor: pointer; }
+    .tarjeta select { font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h1>📋 Kanban · Sistema Solar DAM</h1>
+  <div class="aviso">⚠️ Máximo 1 tarea en HACIENDO por persona</div>
+
+  <div class="nueva">
+    <input id="textoNueva" placeholder="Nueva tarea...">
+    <button onclick="anadirTarea()">Añadir</button>
+    <button onclick="reiniciar()">Reiniciar tablero</button>
+  </div>
+
+  <div class="tablero">
+    <div class="columna por-hacer"><h2>POR HACER</h2><div id="porhacer"></div></div>
+    <div class="columna haciendo"><h2>HACIENDO</h2><div id="haciendo"></div></div>
+    <div class="columna hecho"><h2>HECHO</h2><div id="hecho"></div></div>
+  </div>
+
+  <script>
+    const PERSONAS = ["Sin asignar", "Dani", "Jose Luis", "Rafael Graciano", "Pablo García"];
+    const COLUMNAS = ["porhacer", "haciendo", "hecho"];
+
+    const INICIALES = [
+      { texto: "Roles asignados", quien: "Sin asignar", col: "hecho" },
+      { texto: "Idea de app elegida: Sistema Solar", quien: "Sin asignar", col: "hecho" },
+      { texto: "Historias de usuario escritas", quien: "Sin asignar", col: "hecho" },
+      { texto: "Crear repositorio en GitHub", quien: "Dani", col: "hecho" },
+      { texto: "Sol y planetas girando con periodos reales", quien: "Sin asignar", col: "hecho" },
+      { texto: "Lunas de cada planeta y sus órbitas", quien: "Sin asignar", col: "hecho" },
+      { texto: "Cometas Halley y Encke (órbita de Kepler y cola)", quien: "Sin asignar", col: "hecho" },
+      { texto: "Controles de tiempo: pausa, velocidad, invertir y Hoy", quien: "Sin asignar", col: "hecho" },
+      { texto: "Zoom y seguir a un astro al pulsarlo", quien: "Sin asignar", col: "hecho" },
+      { texto: "Ficha de información de cada astro", quien: "Sin asignar", col: "hecho" },
+      { texto: "Probar la app en el navegador del PC y del móvil", quien: "Sin asignar", col: "porhacer" },
+      { texto: "Añadir colaboradores al repo de GitHub", quien: "Dani", col: "porhacer" },
+      { texto: "Cinturón de asteroides", quien: "Sin asignar", col: "hecho" },
+      { texto: "Versión 3D con Three.js y diseños de planetas", quien: "Sin asignar", col: "hecho" },
+      { texto: "Satélites artificiales y sondas", quien: "Sin asignar", col: "hecho" },
+      { texto: "Simulación del agujero negro TON 618", quien: "Sin asignar", col: "hecho" },
+      { texto: "Planetas enanos (Plutón y Ceres)", quien: "Sin asignar", col: "porhacer" },
+      { texto: "Modo escala real de distancias", quien: "Sin asignar", col: "porhacer" }
+    ];
+
+    let tareas = cargar();
+
+    function cargar() {
+      try {
+        const guardado = localStorage.getItem("kanban-sistema-solar-dam");
+        if (guardado) return JSON.parse(guardado);
+      } catch (e) {}
+      return JSON.parse(JSON.stringify(INICIALES));
+    }
+
+    function guardar() {
+      try { localStorage.setItem("kanban-sistema-solar-dam", JSON.stringify(tareas)); } catch (e) {}
+    }
+
+    // Comprueba la regla: 1 tarea en HACIENDO por persona
+    function puedeHacer(quien, indiceIgnorar) {
+      if (quien === "Sin asignar") return false;
+      return !tareas.some(function (t, i) {
+        return i !== indiceIgnorar && t.col === "haciendo" && t.quien === quien;
+      });
+    }
+
+    function mover(i, direccion) {
+      const t = tareas[i];
+      const nueva = COLUMNAS[COLUMNAS.indexOf(t.col) + direccion];
+      if (!nueva) return;
+      if (nueva === "haciendo" && !puedeHacer(t.quien, i)) {
+        alertaSuave(t.quien === "Sin asignar"
+          ? "Asigna la tarea a alguien antes de moverla a HACIENDO"
+          : t.quien + " ya tiene una tarea en HACIENDO");
+        return;
+      }
+      t.col = nueva;
+      guardar(); pintar();
+    }
+
+    function cambiarPersona(i, quien) {
+      if (tareas[i].col === "haciendo" && !puedeHacer(quien, i)) {
+        alertaSuave(quien + " ya tiene una tarea en HACIENDO");
+        pintar(); return;
+      }
+      tareas[i].quien = quien;
+      guardar(); pintar();
+    }
+
+    function borrar(i) {
+      tareas.splice(i, 1);
+      guardar(); pintar();
+    }
+
+    function anadirTarea() {
+      const input = document.getElementById("textoNueva");
+      const texto = input.value.trim();
+      if (!texto) return;
+      tareas.push({ texto: texto, quien: "Sin asignar", col: "porhacer" });
+      input.value = "";
+      guardar(); pintar();
+    }
+
+    function reiniciar() {
+      tareas = JSON.parse(JSON.stringify(INICIALES));
+      guardar(); pintar();
+    }
+
+    // Muestra un aviso en la cabecera durante 3 segundos (sin alert)
+    function alertaSuave(msg) {
+      const aviso = document.querySelector(".aviso");
+      aviso.textContent = "⚠️ " + msg;
+      setTimeout(function () { aviso.textContent = "⚠️ Máximo 1 tarea en HACIENDO por persona"; }, 3000);
+    }
+
+    function escapar(s) {
+      const d = document.createElement("div");
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    function pintar() {
+      COLUMNAS.forEach(function (c) { document.getElementById(c).innerHTML = ""; });
+      tareas.forEach(function (t, i) {
+        const opciones = PERSONAS.map(function (p) {
+          return '<option' + (p === t.quien ? ' selected' : '') + '>' + p + '</option>';
+        }).join("");
+        const div = document.createElement("div");
+        div.className = "tarjeta";
+        div.innerHTML =
+          '<div class="texto">' + escapar(t.texto) + '</div>' +
+          '<div class="quien">👤 <select onchange="cambiarPersona(' + i + ', this.value)">' + opciones + '</select></div>' +
+          (t.col !== "porhacer" ? '<button onclick="mover(' + i + ', -1)">←</button>' : '') +
+          (t.col !== "hecho" ? '<button onclick="mover(' + i + ', 1)">→</button>' : '') +
+          '<button onclick="borrar(' + i + ')">🗑</button>';
+        document.getElementById(t.col).appendChild(div);
+      });
+    }
+
+    document.getElementById("textoNueva").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") anadirTarea();
+    });
+
+    pintar();
+  </script>
+</body>
+</html>
