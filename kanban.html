@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kanban Notas DAM</title>
+  <title>Kanban Sistema Solar DAM</title>
   <style>
     body { font-family: Arial, sans-serif; background: #eef1f5; margin: 0; padding: 16px; }
     h1 { text-align: center; color: #2c3e50; margin: 0 0 6px; }
@@ -27,7 +27,7 @@
   </style>
 </head>
 <body>
-  <h1>📋 Kanban · Notas DAM</h1>
+  <h1>📋 Kanban · Sistema Solar DAM</h1>
   <div class="aviso">⚠️ Máximo 1 tarea en HACIENDO por persona</div>
 
   <div class="nueva">
@@ -48,28 +48,37 @@
 
     const INICIALES = [
       { texto: "Roles asignados", quien: "Sin asignar", col: "hecho" },
-      { texto: "Idea de app elegida", quien: "Sin asignar", col: "hecho" },
+      { texto: "Idea de app elegida: Sistema Solar", quien: "Sin asignar", col: "hecho" },
       { texto: "Historias de usuario escritas", quien: "Sin asignar", col: "hecho" },
-      { texto: "Crear repositorio en GitHub", quien: "Dani", col: "porhacer" },
-      { texto: "Pantalla básica: título + notas + botón media", quien: "Sin asignar", col: "hecho" },
-      { texto: "Poner en rojo los suspensos", quien: "Sin asignar", col: "porhacer" },
-      { texto: "Mostrar si apruebas o no el curso", quien: "Sin asignar", col: "porhacer" },
-      { texto: "Guardar notas (localStorage)", quien: "Sin asignar", col: "porhacer" },
-      { texto: "Estilos y versión móvil", quien: "Sin asignar", col: "porhacer" }
+      { texto: "Crear repositorio en GitHub", quien: "Dani", col: "hecho" },
+      { texto: "Sol y planetas girando con periodos reales", quien: "Sin asignar", col: "hecho" },
+      { texto: "Lunas de cada planeta y sus órbitas", quien: "Sin asignar", col: "hecho" },
+      { texto: "Cometas Halley y Encke (órbita de Kepler y cola)", quien: "Sin asignar", col: "hecho" },
+      { texto: "Controles de tiempo: pausa, velocidad, invertir y Hoy", quien: "Sin asignar", col: "hecho" },
+      { texto: "Zoom y seguir a un astro al pulsarlo", quien: "Sin asignar", col: "hecho" },
+      { texto: "Ficha de información de cada astro", quien: "Sin asignar", col: "hecho" },
+      { texto: "Probar la app en el navegador del PC y del móvil", quien: "Sin asignar", col: "porhacer" },
+      { texto: "Añadir colaboradores al repo de GitHub", quien: "Dani", col: "porhacer" },
+      { texto: "Cinturón de asteroides", quien: "Sin asignar", col: "hecho" },
+      { texto: "Versión 3D con Three.js y diseños de planetas", quien: "Sin asignar", col: "hecho" },
+      { texto: "Satélites artificiales y sondas", quien: "Sin asignar", col: "hecho" },
+      { texto: "Simulación del agujero negro TON 618", quien: "Sin asignar", col: "hecho" },
+      { texto: "Planetas enanos (Plutón y Ceres)", quien: "Sin asignar", col: "porhacer" },
+      { texto: "Modo escala real de distancias", quien: "Sin asignar", col: "porhacer" }
     ];
 
     let tareas = cargar();
 
     function cargar() {
       try {
-        const guardado = localStorage.getItem("kanban-notas-dam");
+        const guardado = localStorage.getItem("kanban-sistema-solar-dam");
         if (guardado) return JSON.parse(guardado);
       } catch (e) {}
       return JSON.parse(JSON.stringify(INICIALES));
     }
 
     function guardar() {
-      try { localStorage.setItem("kanban-notas-dam", JSON.stringify(tareas)); } catch (e) {}
+      try { localStorage.setItem("kanban-sistema-solar-dam", JSON.stringify(tareas)); } catch (e) {}
     }
 
     // Comprueba la regla: 1 tarea en HACIENDO por persona

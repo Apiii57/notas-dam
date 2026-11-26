@@ -1,4 +1,4 @@
-# PROGRESO · Notas DAM
+# PROGRESO · Sistema Solar DAM
 
 Archivo para retomar el trabajo cada día. **Leedlo al empezar y actualizadlo al terminar.**
 
@@ -9,6 +9,7 @@ Archivo para retomar el trabajo cada día. **Leedlo al empezar y actualizadlo al
 - **Asignatura:** 1º DAM · Proyecto "De Cero a App Web: SCRUM + Kanban + IA + Git".
 - **Regla de oro (la pizza margarita):** primero 1 pantalla sencilla que funcione y después mejoras en micro-fases. Nosotros dirigimos y la IA escribe el código.
 - **Requisito:** la app tiene que funcionar en un único `index.html`, sin servidores ni bases de datos.
+- **Desde el Día 2 la app es 3D** con la librería Three.js, que se carga de internet (CDN jsDelivr). Sin conexión sale un aviso.
 
 ## Equipo y roles
 
@@ -21,18 +22,19 @@ Archivo para retomar el trabajo cada día. **Leedlo al empezar y actualizadlo al
 
 Todos somos Devs. Los roles se pueden cambiar si el grupo lo decide.
 
-## Idea elegida: Calculadora de notas de 1º DAM
+## Idea elegida: Simulador del Sistema Solar
 
-Escribes la nota de cada módulo y la app calcula la media, marca los suspensos y dice si apruebas.
+> **Cambio de idea (25/11/2026):** la primera idea era una calculadora de notas medias. El PO decidió cambiarla por un simulador del sistema solar con las lunas de cada planeta, sus movimientos y cometas. El repositorio y la carpeta siguen llamándose `notas-dam` para no romper el enlace de GitHub.
 
-Módulos: Programación, Bases de Datos, Sistemas Informáticos, Entornos de Desarrollo, Lenguajes de Marcas e IPE I.
+Una página que muestra el Sol, los 8 planetas girando con sus periodos reales, las lunas principales de cada planeta y los cometas Halley y Encke. Se puede acelerar el tiempo, hacer zoom y pulsar cada astro para ver su ficha.
 
 ### Historias de usuario
-1. Como estudiante, quiero escribir mis notas de cada módulo para no tener que calcular a mano.
-2. Como estudiante, quiero ver mi nota media al momento para saber cómo voy.
-3. Como estudiante, quiero ver en rojo los módulos suspensos para saber cuáles tengo que recuperar.
-4. Como estudiante, quiero que mis notas se guarden al cerrar la página para no tener que meterlas otra vez.
-5. Como estudiante, quiero que se vea bien en el móvil para consultarla en clase.
+1. Como estudiante, quiero ver el Sol y los planetas girando para entender cómo se mueve el sistema solar.
+2. Como estudiante, quiero ver las lunas de cada planeta girando a su alrededor para saber cuántas tiene y cómo se mueven.
+3. Como estudiante, quiero ver un cometa con su órbita alargada y su cola para entender en qué se diferencia de un planeta.
+4. Como estudiante, quiero acelerar, parar o invertir el tiempo para ver movimientos que en la realidad tardan años.
+5. Como estudiante, quiero pulsar en un astro y ver su ficha con datos reales para aprender sobre él.
+6. Como estudiante, quiero hacer zoom y moverme por el mapa, también en el móvil, para verlo desde cualquier sitio.
 
 ## Archivos de la carpeta
 
@@ -44,64 +46,74 @@ Módulos: Programación, Bases de Datos, Sistemas Informáticos, Entornos de Des
 | `README.md` | Presentación del proyecto y reglas de Git. |
 | `PROGRESO.md` | Este archivo: dónde estamos y qué toca. |
 
+## Cómo está hecho `index.html` (para explicarlo en clase)
+
+El código está dividido en 9 bloques numerados:
+
+1. **Datos**: arrays `PLANETAS` y `COMETAS` con valores reales (periodos, diámetros, inclinaciones, órbitas). Para añadir una luna basta con una línea.
+2. **Física**: `t` = días desde el 1/1/2000. Planetas y lunas: ángulo = inicial + 360° × t / periodo. Cometas y Nereida: **ecuación de Kepler** (`M = E − e·sen E`) resuelta con el método de Newton. `posicionOrbital` coloca cada punto en 3D según la inclinación y el nodo de su órbita.
+3. **Ruido procedural**: ruido *simplex* 3D y `fbm` (varias capas de ruido) para crear superficies aleatorias pero naturales.
+4. **Diseños**: una función por planeta y luna que decide el color de cada punto de la esfera (bandas, manchas, cráteres, casquetes…).
+5. **Shaders** (programas de la tarjeta gráfica): superficie animada del Sol, brillo de las atmósferas y anillos con sombra.
+6. **Escena 3D**: cámara, luz del Sol, estrellas y Vía Láctea, planetas, lunas, cometas (partículas) y cinturón de asteroides.
+7. **Actualizar**: en cada fotograma se recalculan las posiciones según la fecha.
+8. **Cámara y controles**: OrbitControls, viaje suave hasta el astro elegido y ficha de información.
+9. **Arranque**: pantalla de carga, descarga de las fotos de la Tierra y la Luna, y bucle principal.
+10. **Agujero negro TON 618**: un shader que lanza un rayo por píxel y lo curva paso a paso con la ecuación de la luz en la métrica de Schwarzschild (`aceleración = −1,5·h²·r/|r|⁵`, con el radio del horizonte = 1). Cuando el rayo cruza el plano del disco se suma el color del gas (temperatura según la distancia + efecto Doppler + corrimiento al rojo gravitatorio); si cae dentro del horizonte queda negro; si escapa, se pinta el fondo de estrellas.
+
+11. **Agujero blanco** (dentro de la sección 10): el mismo shader con `uBlanco = 1`. Un agujero blanco es un agujero negro con el tiempo al revés: misma gravedad por fuera (los rayos se curvan igual), pero nada puede entrar y todo sale. Por eso los rayos que en el negro caían al horizonte aquí traen luz (núcleo brillante del tamaño de la sombra), el gas sale en espiral hacia fuera desde el mismo horizonte (sin hueco de la ISCO) y hay ondas de materia que se alejan. Botón "⚪ Agujero blanco" o `index.html#AgujeroBlanco`.
+
+Las naves están en el array `SATELITES` y sus modelos 3D en `MODELOS` (hechos con cajas, cilindros y antenas).
+
+**Escala:** distancia en pantalla = `30 + 75 × √(distancia en UA)`, y los planetas se dibujan mucho más grandes de lo real. Si no, no se vería nada.
+
 ---
 
 ## Estado del Día 1 (24/11/2026)
 
 ### ✅ Hecho
 - Roles asignados (propuesta).
-- Idea de app elegida y 5 historias de usuario.
-- Primera pantalla (`index.html`): lista de módulos con casillas de nota y botón "Calcular media".
-- Tablero Kanban en HTML y CSV preparado para Notion.
-- README con las reglas de trabajo.
+- Primera idea (calculadora de notas), primera pantalla, Kanban y README.
+- Git instalado, repositorio creado y subido: https://github.com/Apiii57/notas-dam
 
-### ⏳ Pendiente del Día 1
-- [ ] **Confirmar en grupo** los roles y la idea de app.
-- [ ] **Abrir `index.html` y `kanban.html` en el navegador** para comprobar que funcionan (aún no se han probado).
-- [ ] **Crear el tablero en Notion**: Importar → CSV (`kanban-notion.csv`) → Añadir vista Tablero → Agrupar por "Estado" → Compartir con los 4.
-- [x] **Git instalado** en el PC de Dani (versión 2.56.1).
-- [x] **Repositorio local creado** (`git init`) con el primer commit.
-- [x] **Repo en GitHub creado y subido:** https://github.com/Apiii57/notas-dam
-- [ ] **Añadir colaboradores** (Settings → Collaborators): Jose Luis, Rafael y Pablo.
+## Estado del Día 2 (25/11/2026)
+
+### ✅ Hecho
+- **Cambio de idea:** simulador del sistema solar. Historias de usuario nuevas.
+- `index.html` rehecho entero:
+  - Sol y 8 planetas con periodos reales, en su posición aproximada de hoy.
+  - 22 lunas: Luna; Fobos y Deimos; Ío, Europa, Ganímedes y Calisto; Mimas, Encélado, Tetis, Dione, Rea, Titán y Jápeto; Miranda, Ariel, Umbriel, Titania y Oberón (órbitas casi de canto por la inclinación de Urano); Proteo, Tritón (retrógrada) y Nereida (muy excéntrica).
+  - Cometas Halley (retrógrado, 75 años) y Encke (3,3 años) con cola de polvo y cola de iones que apuntan en sentido contrario al Sol.
+  - Controles: pausa, invertir el tiempo, velocidad, botón "Hoy", mostrar u ocultar órbitas, nombres y cometas.
+  - Zoom con la rueda o pellizcando, arrastrar para moverse, clic en un astro para seguirlo y ver su ficha.
+- README, Kanban (`kanban.html`) y CSV de Notion actualizados con las tareas nuevas.
+- **Versión 3D profesional** con Three.js:
+  - Tierra y Luna con fotos reales (nubes, brillo del océano, luces nocturnas); resto de planetas y lunas con texturas procedurales detalladas.
+  - Sol animado con bloom, atmósferas, anillos de Saturno con sombra, anillos de Urano, ejes inclinados reales.
+  - Colas de cometa con partículas, cinturón de asteroides, estrellas y Vía Láctea.
+  - Cámara que viaja al astro, lo sigue y se coloca en su lado iluminado. Enlaces directos tipo `index.html#Saturno`.
+  - Probada en Chrome: carga sin errores en la consola.
+- **Naves y satélites**: ISS, Hubble, GPS, geoestacionario, James Webb (L2), MRO (Marte), Parker Solar Probe, Voyager 1 y 2 y New Horizons, con modelos 3D y fichas.
+- **Modo agujero negro TON 618** con trazado de rayos relativista (sombra, anillo de fotones, disco doblado, Doppler, lente gravitacional, chorros opcionales). Botón arriba a la derecha.
+
+- Quitada la sorpresa del eclipse (el susto).
+- **Modo agujero blanco** con su ficha explicativa, probado en Chrome sin errores.
+
+### ⏳ Pendiente
+- [ ] **Confirmar en grupo** el cambio de idea y los roles.
+- [ ] **Probar `index.html`** en el navegador del PC y en el móvil.
+- [ ] **Subir los cambios a GitHub** (`git add .`, `git commit`, `git push`).
+- [ ] **Crear o actualizar el tablero en Notion**: Importar → CSV (`kanban-notion.csv`) → vista Tablero → Agrupar por "Estado".
+- [ ] **Añadir colaboradores** en GitHub (Settings → Collaborators): Jose Luis, Rafael y Pablo.
 - [ ] Los demás hacen `git clone https://github.com/Apiii57/notas-dam.git`.
 
 ---
 
 ## Siguientes tareas (por prioridad)
 
-1. **Poner en rojo los suspensos**: si una nota es menor que 5, la fila se marca en rojo.
-2. **Decir si apruebas el curso**: mensaje "Apruebas todo 🎉" o "Tienes que recuperar: …".
-3. **Guardar notas**: usar `localStorage` para que las notas sigan ahí al recargar la página.
-4. **Estilos y versión móvil**: mejorar el aspecto y comprobarlo en el móvil.
+1. **Probar en el móvil** y corregir lo que se vea mal.
+2. **Planetas enanos**: Plutón (con Caronte) y Ceres.
+3. **Modo escala real**: un botón para ver las distancias reales y darse cuenta de lo vacío que está el espacio.
+4. **Versión sin internet**: guardar Three.js dentro de la carpeta para que funcione sin conexión.
 
-Ideas para más adelante (solo si sobra tiempo): media ponderada por horas de cada módulo, botón "borrar notas" y modo oscuro.
-
----
-
-## Cómo trabajar cada día
-
-1. `git pull` antes de tocar nada.
-2. Cada uno coge **1 tarea** del Kanban y la mueve a HACIENDO.
-3. Se pide el código a la IA, se prueba en el navegador y, si funciona, se hace commit:
-   ```
-   git add .
-   git commit -m "Qué he cambiado"
-   git push
-   ```
-4. La tarea se mueve a HECHO.
-5. **Al terminar el día, se actualiza este archivo** (qué se hizo, qué toca y qué bloqueos hay).
-
-## Bloqueos / dudas abiertas
-
-- Falta añadir a los compañeros como colaboradores en GitHub.
-- Falta confirmar los roles y la idea con todo el grupo.
-
----
-
-## Registro diario
-
-### Día 1 · 24/11/2026
-Montamos la base del proyecto: roles, idea, historias de usuario, primera pantalla y Kanban. Git instalado y repo subido a https://github.com/Apiii57/notas-dam. Falta crear el tablero en Notion y añadir colaboradores.
-
-### Día 2 · __/__/____
-_(rellenar)_
+Ideas para más adelante (solo si sobra tiempo): más cometas, rastro de la órbita al moverse, sonido, y un modo "quiz" con preguntas sobre los planetas.
